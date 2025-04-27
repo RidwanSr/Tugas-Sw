@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login & Register System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .toggle-link a {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="form-title">Login</h2>
+
+    <!-- Form Login -->
+    <form id="login-form" action="login.php" method="POST">
+        <input type="text" name="username" placeholder="Username" required aria-label="Username">
+        <input type="password" name="password" placeholder="Password" required aria-label="Password">
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Form Register -->
+    <form id="register-form" action="register.php" method="POST" style="display: none;">
+        <input type="text" name="nama" placeholder="Nama Lengkap" required aria-label="Nama Lengkap">
+        <input type="email" name="email" placeholder="Email" required aria-label="Email">
+        <input type="text" name="alamat" placeholder="Alamat" required aria-label="Alamat">
+        <input type="text" name="username" placeholder="Username" required aria-label="Username">
+        <input type="password" name="password" placeholder="Password" required aria-label="Password">
+        <input type="tel" name="telepon" placeholder="No. Telepon" required aria-label="No. Telepon">
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="toggle-link">
+        <a id="toggle-link" onclick="toggleForm()">Belum punya akun? Register di sini</a>
+    </div>
+</div>
+
+<script>
+    function toggleForm() {
+        var loginForm = document.getElementById('login-form');
+        var registerForm = document.getElementById('register-form');
+        var formTitle = document.getElementById('form-title');
+        var toggleLink = document.getElementById('toggle-link');
+
+        if (loginForm.style.display === "none") {
+            loginForm.style.display = "block";
+            registerForm.style.display = "none";
+            formTitle.innerText = "Login";
+            toggleLink.innerText = "Belum punya akun? Register di sini";
+        } else {
+            loginForm.style.display
+            loginForm.style.display = "none";
+            registerForm.style.display = "block";
+            formTitle.innerText = "Register";
+            toggleLink.innerText = "Sudah punya akun? Login di sini";
+        }
+    }
+</script>
+
+</body>
+</html>
