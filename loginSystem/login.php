@@ -36,7 +36,7 @@ if ($result) {
     }
 } else {
     $status = 'error';
-    $message = 'Query error: ' . mysqli_error($conn);
+    $message = 'Query error:' . mysqli_error($conn);
 }
 
 mysqli_close($conn);
