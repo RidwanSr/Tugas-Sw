@@ -27,7 +27,7 @@ if ($result) {
         } else {
             // password salah
             $status = 'error';
-            $message = 'Password salah!';
+            $message = 'Password salah! ';
         }
     } else {
         // username tidak ditemukan

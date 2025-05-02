@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $status = 'error';
-            $message = 'Error saat registrasi: ' . $stmt->error;
+            $message = 'Error saat registrasi : ' . $stmt->error;
         }
 
         $stmt->close();
