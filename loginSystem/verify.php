@@ -15,12 +15,10 @@ if ($conn->connect_error) {
 $status = '';
 $message = '';
 
-// Cek apakah ada parameter email dan token di URL
 if (isset($_GET['email']) && isset($_GET['token'])) {
     $email = $_GET['email'];
     $token = $_GET['token'];
 
-    // Cari user berdasarkan email dan token
     $sql = "SELECT * FROM users WHERE email=? AND verification_token=?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $email, $token);
