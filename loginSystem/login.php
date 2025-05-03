@@ -61,7 +61,7 @@ mysqli_close($conn);
             });
         } else if (status === "error") {
             Swal.fire({
-                title: 'Login Gagal!',
+                title: 'Login Gagal! ',
                 text: message,
                 icon: 'error',
                 timer: 2000,

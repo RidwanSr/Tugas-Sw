@@ -103,7 +103,7 @@ $conn->close();
                 timer: 3000,
                 showConfirmButton: false
             }).then(function() {
-                window.location.href = 'index.html'; // setelah daftar, balik ke login
+                window.location.href = 'index.html'; 
             });
         } else if (status === "error" && message !== '') {
             Swal.fire({
@@ -113,7 +113,7 @@ $conn->close();
                 timer: 4000,
                 showConfirmButton: false
             }).then(function() {
-                window.location.href = 'register.php'; // balik ke form register
+                window.location.href = 'register.php'; 
             });
         }
     });
