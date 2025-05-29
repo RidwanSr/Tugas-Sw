@@ -1,16 +1,6 @@
 <?php
-// Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "db_login";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+include 'koneksi.php';
+session_start();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -32,53 +22,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Pastikan semua data telah diisi
     if (!empty($nama) && !empty($email) && !empty($alamat) && !empty($username) && !empty($password) && !empty($telepon)) {
-        // Hash password untuk keamanan
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Generate token verifikasi
-        $token = bin2hex(random_bytes(50));
+        // Cek apakah email atau username sudah digunakan
+        $check = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
+        $check->bind_param("ss", $email, $username);
+        $check->execute();
+        $check_result = $check->get_result();
 
-        // Siapkan dan jalankan query
-        $sql = "INSERT INTO users (nama, email, alamat, username, password, telepon, is_verified, verification_token) 
-                VALUES (?, ?, ?, ?, ?, ?, 0, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $nama, $email, $alamat, $username, $hashed_password, $telepon, $token);
-
-        if ($stmt->execute()) {
-            // Kirim email verifikasi
-            $mail = new PHPMailer(true);
-            try {
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com'; // Sesuaikan host SMTP kamu
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'ridwansr043@gmail.com'; // Ganti email kamu
-                $mail->Password   = 'wadl vuvm jwws ctoq'; // Ganti password email kamu
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
-
-                $mail->setFrom('your_email@gmail.com', 'Your App Name');
-                $mail->addAddress($email);
-
-                $mail->isHTML(true);
-                $mail->Subject = 'Verifikasi Email Anda';
-                $mail->Body    = "Hai $nama, <br><br>
-                                  Silakan klik link berikut untuk verifikasi akun Anda: <br><br>
-                                  <a href='localhost/sw_github/verify.php?email=$email&token=$token'>Verifikasi Email</a> <br><br>
-                                  Terima kasih.";
-
-                $mail->send();
-                $status = 'success';
-                $message = 'Registrasi berhasil! Silakan cek email untuk verifikasi.';
-            } catch (Exception $e) {
-                $status = 'error';
-                $message = "Registrasi berhasil, tapi email tidak terkirim. Mailer Error: {$mail->ErrorInfo}";
-            }
-        } else {
+        if ($check_result->num_rows > 0) {
             $status = 'error';
-            $message = 'Error saat registrasi: ' . $stmt->error;
+            $message = 'Email atau Username sudah digunakan!';
+        } else {
+            // Hash password untuk keamanan
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Generate token verifikasi
+            $token = bin2hex(random_bytes(50));
+
+            // Siapkan dan jalankan query
+            $sql = "INSERT INTO users (nama, email, alamat, username, password, telepon, is_verified, verification_token) 
+                    VALUES (?, ?, ?, ?, ?, ?, 0, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssss", $nama, $email, $alamat, $username, $hashed_password, $telepon, $token);
+
+            if ($stmt->execute()) {
+                // Kirim email verifikasi
+                $mail = new PHPMailer(true);
+                try {
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'ridwansr043@gmail.com'; // Ganti
+                    $mail->Password   = 'wadl vuvm jwws ctoq';    // Ganti
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
+
+                    $mail->setFrom('your_email@gmail.com', 'Your App Name');
+                    $mail->addAddress($email);
+
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Verifikasi Email Anda';
+                    $mail->Body    = "Hai $nama, <br><br>
+                                      Silakan klik link berikut untuk verifikasi akun Anda: <br><br>
+                                      <a href='localhost/sw_github/verify.php?email=$email&token=$token'>Verifikasi Email</a> <br><br>
+                                      Terima kasih.";
+
+                    $mail->send();
+                    $status = 'success';
+                    $message = 'Registrasi berhasil! Silakan cek email untuk verifikasi.';
+                } catch (Exception $e) {
+                    $status = 'error';
+                    $message = "Registrasi berhasil, tapi email tidak terkirim. Mailer Error: {$mail->ErrorInfo}";
+                }
+            } else {
+                $status = 'error';
+                $message = 'Error saat registrasi: ' . $stmt->error;
+            }
+
+            $stmt->close();
         }
 
-        $stmt->close();
+        $check->close();
     } else {
         $status = 'error';
         $message = 'Semua field harus diisi!';
@@ -103,7 +107,7 @@ $conn->close();
                 timer: 3000,
                 showConfirmButton: false
             }).then(function() {
-                window.location.href = 'index.html'; 
+                window.location.href = 'index.html';
             });
         } else if (status === "error" && message !== '') {
             Swal.fire({
@@ -113,7 +117,7 @@ $conn->close();
                 timer: 4000,
                 showConfirmButton: false
             }).then(function() {
-                window.location.href = 'register.php'; 
+                window.location.href = 'index.html';
             });
         }
     });
