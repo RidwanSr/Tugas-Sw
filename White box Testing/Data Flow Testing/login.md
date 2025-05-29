@@ -1,91 +1,10 @@
-# White Box Flow Testing - login.php
+### Tabel White Box Flow Testing
 
-Dokumen ini menjelaskan hasil pengujian *white box flow testing* untuk skrip PHP `login.php`. Pengujian ini berfokus pada struktur internal dan logika kode untuk memastikan semua jalur eksekusi yang mungkin berfungsi sesuai harapan.
-
-**Kode yang Diuji:** `login.php`
-
-```php
-<?php
-include 'koneksi.php';
-session_start();
-
-$status = ''; // untuk nyimpan status login
-$message = '';
-
-// Cek apakah form dikirim via POST dan key tersedia
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($_POST['password'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Hindari SQL Injection (gunakan prepared statements jika mau lebih aman)
-    $sql = "SELECT * FROM users WHERE username = '$username'";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        if (mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-            if (password_verify($password, $user['password'])) {
-                // login sukses
-                $status = 'success';
-                $message = 'Selamat datang ' . $user['nama'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['nama'] = $user['nama'];
-            } else {
-                // password salah
-                $status = 'error';
-                $message = 'Password salah!';
-            }
-        } else {
-            // username tidak ditemukan
-            $status = 'error';
-            $message = 'Username tidak ditemukan!';
-        }
-    } else {
-        $status = 'error';
-        $message = 'Query error: ' . mysqli_error($conn);
-    }
-
-    mysqli_close($conn);
-}
-?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <script src="[https://cdn.jsdelivr.net/npm/sweetalert2@11](https://cdn.jsdelivr.net/npm/sweetalert2@11)"></script>
-</head>
-<body>
-<?php if (!empty($status)): ?>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let status = "<?php echo $status; ?>";
-        let message = "<?php echo $message; ?>";
-
-        if (status === "success") {
-            Swal.fire({
-                title: 'Login Berhasil!',
-                text: message,
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            }).then(function() {
-                window.location.href = 'halaman.php';
-            });
-        } else if (status === "error") {
-            Swal.fire({
-                title: 'Login Gagal!',
-                text: message,
-                icon: 'error',
-                timer: 2000,
-                showConfirmButton: false
-            }).then(function() {
-                window.location.href = 'index.html';
-            });
-        }
-    });
-</script>
-<?php endif; ?>
-</body>
-</html>
+| Kondisi yang Diuji                                                                                                                              | Hasil yang Diharapkan                                                                                                                                                      | Hasil Aktual                                                                                                                                                              | Status |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| `$_SERVER["REQUEST_METHOD"] != "POST"` (akses halaman langsung)                                                                                 | Variabel `$status` dan `$message` kosong, tidak ada SweetAlert2 yang ditampilkan.                                                                                         | Variabel `$status` dan `$message` kosong, tidak ada SweetAlert2 yang ditampilkan.                                                                                         | ✅     |
+| `$_SERVER["REQUEST_METHOD"] == "POST"` tetapi `isset($_POST['username'])` atau `isset($_POST['password'])` adalah `false`                        | Variabel `$status` dan `$message` kosong, tidak ada SweetAlert2 yang ditampilkan.                                                                                         | Variabel `$status` dan `$message` kosong, tidak ada SweetAlert2 yang ditampilkan.                                                                                         | ✅     |
+| `$_SERVER["REQUEST_METHOD"] == "POST"`, `username` dan `password` terisi, `mysqli_query($conn, $sql)` gagal (misal: koneksi DB error, atau query sintaks error) | `$status` = 'error', `$message` = 'Query error: ...', SweetAlert2 'Login Gagal!' dengan pesan error query, redirect ke `index.html`.                                   | `$status` = 'error', `$message` = 'Query error: ...', SweetAlert2 'Login Gagal!' dengan pesan error query, redirect ke `index.html`.                                   | ✅     |
+| `$_SERVER["REQUEST_METHOD"] == "POST"`, `username` dan `password` terisi, `mysqli_query($conn, $sql)` berhasil, tetapi `mysqli_num_rows($result) == 0` (username tidak ditemukan) | `$status` = 'error', `$message` = 'Username tidak ditemukan!', SweetAlert2 'Login Gagal!' dengan pesan "Username tidak ditemukan!", redirect ke `index.html`.          | `$status` = 'error', `$message` = 'Username tidak ditemukan!', SweetAlert2 'Login Gagal!' dengan pesan "Username tidak ditemukan!", redirect ke `index.html`.          | ✅     |
+| `$_SERVER["REQUEST_METHOD"] == "POST"`, `username` ditemukan, tetapi `password_verify($password, $user['password'])` adalah `false` (password salah) | `$status` = 'error', `$message` = 'Password salah!', SweetAlert2 'Login Gagal!' dengan pesan "Password salah!", redirect ke `index.html`.                                | `$status` = 'error', `$message` = 'Password salah!', SweetAlert2 'Login Gagal!' dengan pesan "Password salah!", redirect ke `index.html`.                                | ✅     |
+| `$_SERVER["REQUEST_METHOD"] == "POST"`, `username` ditemukan dan `password_verify($password, $user['password'])` adalah `true` (login sukses)    | `$status` = 'success', `$message` = 'Selamat datang [nama user]', session `username` dan `nama` diatur, SweetAlert2 'Login Berhasil!' dengan pesan selamat datang, redirect ke `halaman.php`. | `$status` = 'success', `$message` = 'Selamat datang [nama user]', session `username` dan `nama` diatur, SweetAlert2 'Login Berhasil!' dengan pesan selamat datang, redirect ke `halaman.php`. | ✅     |
