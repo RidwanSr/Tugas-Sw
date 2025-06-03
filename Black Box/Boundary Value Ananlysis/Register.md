@@ -19,3 +19,12 @@
 |               | EC3: Panjang > 13 digit                   | Terlalu panjang                   | Invalid         |
 |               | EC4: Mengandung huruf atau simbol         | Hanya boleh angka                 | Invalid         |
 
+
+# Test Case: Nama Lengkap
+
+| Test Case         | Input           |  ekspektasi                          | actual                        | status |
+|-------------------|------------------|----------------------------------------|------------------------------|--------|
+| Kosong            | ""               | Ditolak, muncul pesan "Nama wajib diisi" |  Ditolak dan  muncul pesan | Passed |
+| Karakter valid    | "Budi Santoso"  | Diterima tanpa error                   | Diterima tanpa error         | Failed |
+| Mengandung angka  | "Budi123"       | Ditolak, muncul pesan validasi         | Diterima tanpa error         | Failed |
+| Mengandung simbol | "Budi@Santoso"  | Ditolak, muncul pesan validasi         | Diterima tanpa error         | Failed |
