@@ -28,3 +28,13 @@
 | Karakter valid    | "Budi Santoso"  | Diterima tanpa error                   | Diterima tanpa error         | Failed |
 | Mengandung angka  | "Budi123"       | Ditolak, muncul pesan validasi         | Diterima tanpa error         | Failed |
 | Mengandung simbol | "Budi@Santoso"  | Ditolak, muncul pesan validasi         | Diterima tanpa error         | Failed |
+
+
+# Test Case: Email
+
+| Test Case       | Input             |  ekspektasi                                     | actual                        | status |
+|-----------------|-------------------|------------------------|---------------------------------------------|-------------|
+| Kosong          | ""                |  Ditolak, muncul pesan "Email wajib diisi"  | Ditolak dan muncul pesan | Passed|
+| Tanpa @         | "email.com"       |  Ditolak, muncul pesan "Format email salah" | Ditolak dan muncul pesan| Passed|
+| Tanpa domain    | "user@"           |  Ditolak, muncul pesan "Format email salah" | Ditolak, muncul pesan |Passed|
+| Valid           | "user@example.com"|  Diterima tanpa error                       | Diterima tanpa error  |Passed|
