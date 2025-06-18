@@ -12,3 +12,5 @@
 | 8  | Password terlalu pendek (<8 karakter)    | "user123"      | "short"        | Invalid          | Password tidak memenuhi panjang minimal  | Validasi input ditampilkan          |
 | 9  | Username mengandung karakter tidak valid | "user!@#"      | "pass12345"    | Invalid          | Karakter tidak diperbolehkan             | Validasi input ditampilkan          |
 | 10 | Password mengandung spasi di tengah      | "user123"      | "pass 12345"   | Invalid          | Spasi di password tidak diizinkan        | Validasi input ditampilkan          |
+
+.

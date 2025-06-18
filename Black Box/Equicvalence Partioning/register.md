@@ -18,3 +18,5 @@
 |               | EC2: Panjang < 10 digit                   | Terlalu pendek                    | Invalid         | Diterima|failed|
 |               | EC3: Panjang > 13 digit                   | Terlalu panjang                   | Invalid         | Diterima|failed|
 |               | EC4: Mengandung huruf atau simbol         | Hanya boleh angka                 | Invalid         | Diterima|failed|
+
+.
