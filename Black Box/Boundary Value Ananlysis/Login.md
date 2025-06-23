@@ -9,3 +9,5 @@
 | Username kosong                           | ""             | "password123"  |  Ditolak, muncul pesan validasi               |  Ditolak                    |Passed|
 | Password kosong                           | "budi123"      | ""             |   Ditolak, muncul pesan validasi               |  Ditolak                    |Passed|
 | Keduanya kosong                           | ""             | ""             |  Ditolak, muncul pesan validasi               |  Ditolak                     |Passed|
+
+.
